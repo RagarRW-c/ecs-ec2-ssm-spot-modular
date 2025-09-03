@@ -84,6 +84,13 @@ resource "aws_launch_template" "ecs" {
         Name = "${var.project}-ecs-instance"
     })
   }
+
+  dynamic "instance_market_options" {
+  for_each = var.use_spot ? [1] : []
+  content {
+    market_type = "spot"
+  }
+}
 }
 
 #ASG On-deman default, optional SPOT

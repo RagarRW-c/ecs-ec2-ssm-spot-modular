@@ -20,7 +20,13 @@ jobs:
       - name: TFLint
         run: |
           tflint --init
-          tflint --module
+          tflint --call-module-type=all
+      - name: TFLint (modules)
+        run: |
+          tflint --chdir modules/ecs-ec2-cluster --init
+          tflint --chdir modules/ecs-ec2-cluster --call-module-type=all
+          tflint --chdir modules/ecs-ec2-service --init
+          tflint --chdir modules/ecs-ec2-service --call-module-type=all
       # plan (bez stanu zdalnego — tylko jako sanity-check)
       - name: Terraform plan (dry-run)
         run: |

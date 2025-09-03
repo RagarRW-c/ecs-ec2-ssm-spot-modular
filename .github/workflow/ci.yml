@@ -1,0 +1,29 @@
+name: terraform-ci
+
+on:
+  push: { branch: [main] }
+  pull_request:
+jobs:
+  tf: 
+  runs-on: ubuntu-latest
+  permissions:
+    contents: read
+    id-token: write
+  steps:
+    - uses: actions/checkout@v4
+    - uses: hashicorpt/setup-terraform@v3
+    - uses: terraform-linters/setup-tflint@v4
+    - name: Terraform fmt/validate
+      run: |
+        terraform init -backend=false
+        terraform fmt check
+        terraform validate
+    - name: TFLint
+      run: |
+        tflint --init
+        tflint --module
+    # plan (just sanity-check)
+    - name: Terraform plan (dry-run)
+      run: |
+        terraform init -backend=false
+        terraform plan -input=false -lock=false ||
